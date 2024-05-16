@@ -1,11 +1,12 @@
 # https://github.com/Northa/consensus/
 from urllib import request
+from typing import Dict
 from sys import exit
 from json import loads
 import math
 from collections import defaultdict
 import os
-
+import pprint
 
 ERR_MSG = f"\033[91m[ERR] API endpoint unreachable: _err_api_\n" \
           f"[ERR] Be sure you have enabled your API " \
@@ -66,40 +67,37 @@ def get_validators():
         validators.append(res)
     return validators
 
-
 def get_bonded():
-    result = handle_request(REST, '/cosmos/staking/v1beta1/pool')['pool']
+    result = handle_request(REST, '/initia/mstaking/v1/pool')['pool']
     return result
-
 
 def strip_emoji_non_ascii(moniker):
     moniker = "".join([letter for letter in moniker if letter.isascii()])
     return moniker[:15].strip().lstrip()
 
-
 def get_validators_rest(proposer=None):
     validator_dict = dict()
-    bonded_tokens = int(get_bonded()["bonded_tokens"])
-    validators = handle_request(REST, '/cosmos/staking/v1beta1/validators?status=BOND_STATUS_BONDED&pagination.limit=2000')
+    pool_response = get_bonded()
+    validators = handle_request(REST, '/initia/mstaking/v1/validators?status=BOND_STATUS_BONDED&pagination.limit=2000')
+    set_vp = sum([int(x["voting_power"]) for x in validators["validators"]])
 
     for validator in validators['validators']:
 
-        validator_vp = int(validator["tokens"])
-        vp_percentage = round((100 / bonded_tokens) * validator_vp, 3)
+        validator_vp = int(validator["voting_power"]) / set_vp
+        vp_percentage = round(int(validator["voting_power"]) / set_vp,3)
         moniker = validator["description"]["moniker"][:15].strip()
         moniker = strip_emoji_non_ascii(moniker)
         validator_dict[validator["consensus_pubkey"]["key"]] = {
-                                 "moniker": moniker,
-                                 "address": validator["operator_address"],
-                                 "status": validator["status"],
-                                 "voting_power": validator_vp,
-                                 "voting_power_perc": f"{vp_percentage}%",
-                                 "voting_power_perc1": vp_percentage}
+                                    "moniker": moniker,
+                                    "address": validator["operator_address"],
+                                    "status": validator["status"],
+                                    "voting_power": validator_vp,
+                                    "voting_power_perc": f"{vp_percentage}%",
+                                    "voting_power_perc1": vp_percentage}
         if proposer in validator["consensus_pubkey"]["key"]:
             proposer = moniker
 
     return validator_dict, proposer
-
 
 def merge():
     votes, proposer = get_validator_votes()
@@ -200,7 +198,6 @@ def calculate_colums(result):
 #             # print(colored(f"Evidence: {moniker}\nHeight: {evidence['height']} {evidence['consensus_address']} power: {evidence['power']}\n", 'yellow'))
 #             print(f"\033[93mEvidence: {moniker}\nHeight: {evidence['height']} {evidence['consensus_address']} power: {evidence['power']}\033[0m\n")
 
-
 def main(STATE):
     validators, proposer = merge()
     online_vals = 0
@@ -226,7 +223,6 @@ def main(STATE):
     # get_evidence(STATE['result']['round_state']['height/round/step'])
     result = colorize_output(validators)
     print(calculate_colums(result))
-
 
 if __name__ == '__main__':
     try:
