@@ -1,13 +1,13 @@
 all credits to <https://github.com/Northa/consensus>
 
-# consensus
+# consensus script for Initia blockchain
 A brief info of the state of the consensus
 
 <details>
   <summary>Quick start:</summary>
 
 ```sh
-cd && git clone https://github.com/Northa/consensus.git && cd consensus
+cd && git clone https://github.com/DAICers/consensus-initia.git && cd consensus-initia
 python3 consensus.py
 ```  
 Autorefresh not yet implemented as a workaround you can use bash trick:  
@@ -33,7 +33,7 @@ Autorefresh not yet implemented as a workaround you can use bash trick:
   #### Technically, the installation itself is cloning the repo and providing 2 variables
 
 ```sh
-$ cd && git clone https://github.com/Northa/consensus.git && cd consensus
+$ cd && git clone https://github.com/DAICers/consensus-initia.git && cd consensus-initia
 ```  
   
   Next open consensus.py in editor and replace REST/RPC variables with an appropriate values.  
@@ -49,18 +49,7 @@ $ cd && git clone https://github.com/Northa/consensus.git && cd consensus
 <details>
   <summary>Tested chains:</summary>  
   
-  - Evmos mainnet
-  - Evmos testnet
-  - Umee  
-  - Archway  
-  - Cosmic Horizon  
-  - Kyve  
-  - Kichain
-  - Konstellation
-  - Stargaze
-  - AssetMantle
-  - Pylons
-  - Deweb
+- initia
   
 </details>
 
