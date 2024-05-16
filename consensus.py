@@ -83,8 +83,8 @@ def get_validators_rest(proposer=None):
 
     for validator in validators['validators']:
 
-        validator_vp = int(validator["voting_power"]) / set_vp
-        vp_percentage = round(int(validator["voting_power"]) / set_vp,3)
+        validator_vp = int(validator["voting_power"])
+        vp_percentage = round(100 * int(validator["voting_power"]) / set_vp,3)
         moniker = validator["description"]["moniker"][:15].strip()
         moniker = strip_emoji_non_ascii(moniker)
         validator_dict[validator["consensus_pubkey"]["key"]] = {
