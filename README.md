@@ -1,3 +1,5 @@
+all credits to <https://github.com/Northa/consensus>
+
 # consensus
 A brief info of the state of the consensus
 
